@@ -45,8 +45,7 @@ const makeHtmlBoard = (HEIGHT, WIDTH) => {
 }
 
 /** findSpotForCol: given column x, return top empty y (null if filled) */
-function findSpotForCol(x) {
-  // TODO: write the real version of this, rather than always returning 0
+const findSpotForCol = (x) => {
   for(let i = board.length - 1; i >= 0; i--) {
     if (board[i][x] === 0) {
       return i;
@@ -105,7 +104,10 @@ function handleClick(evt) {
   
   // switch players
   currPlayer = currPlayer === 1 ? 2 : 1;
+  setStatus();
 }
+
+const setStatus = () => document.querySelector('#turn').innerText = `Player${currPlayer}'s turn!`;
 
 /** checkForWin: check board cell-by-cell for "does a win start here?" */
 function checkForWin() {
@@ -147,6 +149,7 @@ const reset = () => {
   }
   currPlayer = 1;
   gameOver = false;
+  setStatus();
   makeBoard(HEIGHT, WIDTH);
   makeHtmlBoard(HEIGHT, WIDTH); 
 }

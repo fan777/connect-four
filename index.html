@@ -5,12 +5,16 @@
 </head>
 <body>
 <h1>Connect Four</h1>
-
-<button>New Game</button>
-
-<div id="game">
-  <table id="board"></table>
+<div id="status">
+  <b><span id="turn"></span></b>
+  <button>New Game</button>
 </div>
+<div id="game">
+  <table id="board"></table> 
+</div>
+<div id="rules">
+  <p><b>Game rules:  Players take turns dropping tokens from the top of the board.  The first player to create a line of four (horizontally, vertically, or diagonally) wins!</b></p>
+</div> 
 
 <script src="connect4.js"></script>
 
