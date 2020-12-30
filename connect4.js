@@ -7,7 +7,8 @@
 const WIDTH = 7;
 const HEIGHT = 6;
 let currPlayer = 1; // active player: 1 or 2
-let board = []; 
+let board = [];
+let gameOver = false;
 
 /** makeBoard: create in-JS board structure:
  *    board = array of rows, each row is array of cells  (board[y][x])
@@ -46,9 +47,8 @@ const makeHtmlBoard = (HEIGHT, WIDTH) => {
 /** findSpotForCol: given column x, return top empty y (null if filled) */
 function findSpotForCol(x) {
   // TODO: write the real version of this, rather than always returning 0
-  for(let i = board.length - 1; i > -1; i--) {
+  for(let i = board.length - 1; i >= 0; i--) {
     if (board[i][x] === 0) {
-      console.log(i);
       return i;
     }
   }
@@ -58,8 +58,14 @@ function findSpotForCol(x) {
 /** placeInTable: update DOM to place piece into HTML table of board */
 function placeInTable(y, x) {
   // TODO: make a div and insert into correct table cell
-  let piece = document.createElement('div');
-  piece.classList.add('piece', `player${currPlayer}`)
+  const piece = document.createElement('div');
+  piece.classList.add('piece', `player${currPlayer}`);
+  piece.animate([
+    {transform: `translateY(${-50 * (y + 2)}px)`},
+    {transform: 'translateY(0px)'}
+  ], {
+    duration: 1000
+  })
   document.getElementById(`${y}-${x}`).append(piece);
 }
 
@@ -71,6 +77,11 @@ function endGame(msg) {
 
 /** handleClick: handle click of column top to play piece */
 function handleClick(evt) {
+  if (gameOver) {
+    endGame('Game is over! Start a new game!');
+    return;
+  }
+
   // get x from ID of clicked cell
   let x = +evt.target.id;
 
@@ -94,6 +105,7 @@ function handleClick(evt) {
   // check for tie
   // TODO: check if all cells in board are filled; if so call, call endGame
   if (board.every(row => row.every(cell => cell !== 0))) {
+    gameOver = true;
     endGame('Tie game!  Board is filled!');
   }
   
@@ -120,20 +132,37 @@ function checkForWin() {
     );
   }
 
-  // TODO: read and understand this code. Add comments to help you.
-  for (let y = 0; y < HEIGHT; y++) {
-    for (let x = 0; x < WIDTH; x++) {
+  /* Iterate through every point, obtain the four coordinate values that
+     correspond to a win condition, pass them to _win check function */
+  for (let y = 0; y < HEIGHT; y++) { 
+    for (let x = 0; x < WIDTH; x++) { 
       let horiz = [[y, x], [y, x + 1], [y, x + 2], [y, x + 3]];
       let vert = [[y, x], [y + 1, x], [y + 2, x], [y + 3, x]];
       let diagDR = [[y, x], [y + 1, x + 1], [y + 2, x + 2], [y + 3, x + 3]];
       let diagDL = [[y, x], [y + 1, x - 1], [y + 2, x - 2], [y + 3, x - 3]];
 
       if (_win(horiz) || _win(vert) || _win(diagDR) || _win(diagDL)) {
+        gameOver = true;
         return true;
       }
     }
   }
 }
 
-makeBoard(HEIGHT, WIDTH);
-makeHtmlBoard(HEIGHT, WIDTH);
+function newGame() {
+  for (let tr of document.querySelectorAll('tr')) {
+    tr.remove();
+  }
+  currPlayer = 1;
+  gameOver = false;
+  makeBoard(HEIGHT, WIDTH);
+  makeHtmlBoard(HEIGHT, WIDTH); 
+}
+
+document.querySelector('button').addEventListener('click', (e) => {
+  newGame();
+})
+
+window.addEventListener('load', function(e) {
+  newGame();
+});
