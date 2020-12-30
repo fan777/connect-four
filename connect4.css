@@ -20,11 +20,6 @@ button {
   background-color: white;
 }
 
-/* @keyframes dropDown {
-  0% {transform: translateY(-100px);}
-  100% {transform: translateY(0px);}
-} */
-
 /* pieces are div within game table cells: draw as colored circles */
 .piece {
   border-radius: 50%;
@@ -32,7 +27,6 @@ button {
   width: 80%;
   height: 80%;
   position: relative;
-  /* animation: dropDown 1s linear; */
 }
 
 .piece.player1 {
