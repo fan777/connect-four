@@ -70,10 +70,7 @@ function placeInTable(y, x) {
 }
 
 /** endGame: announce game end */
-function endGame(msg) {
-  // TODO: pop up alert message
-  alert(msg);
-}
+const endGame = (msg) => alert(msg);
 
 /** handleClick: handle click of column top to play piece */
 function handleClick(evt) {
@@ -144,7 +141,7 @@ function checkForWin() {
   }
 }
 
-function newGame() {
+const reset = () => {
   for (let tr of document.querySelectorAll('tr')) {
     tr.remove();
   }
@@ -155,9 +152,9 @@ function newGame() {
 }
 
 document.querySelector('button').addEventListener('click', (e) => {
-  newGame();
+  reset();
 })
 
 window.addEventListener('load', function(e) {
-  newGame();
+  reset();
 });
