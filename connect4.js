@@ -67,7 +67,7 @@ const endGame = (msg) => alert(msg);
 /** handleClick: handle click of column top to play piece */
 function handleClick(evt) {
   if (checkForWin() || checkForTie()) {
-    endGame('Game is over! Start a new game!');
+    endGame("Game is over! Let's start a new game!");
     document.querySelector('button').click();
     return;
   }
