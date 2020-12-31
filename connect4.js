@@ -8,7 +8,6 @@ const WIDTH = 7;
 const HEIGHT = 6;
 let currPlayer = 1; // active player: 1 or 2
 let board = [];
-let gameOver = false;
 
 /** makeBoard: create in-JS board structure:
  *    board = array of rows, each row is array of cells  (board[y][x])
@@ -59,12 +58,6 @@ function placeInTable(y, x) {
   // TODO: make a div and insert into correct table cell
   const piece = document.createElement('div');
   piece.classList.add('piece', `player${currPlayer}`);
-  piece.animate([
-    {transform: `translateY(${-50 * (y + 2)}px)`},
-    {transform: 'translateY(0px)'}
-  ], {
-    duration: 1500
-  })
   document.getElementById(`${y}-${x}`).append(piece);
 }
 
@@ -73,8 +66,9 @@ const endGame = (msg) => alert(msg);
 
 /** handleClick: handle click of column top to play piece */
 function handleClick(evt) {
-  if (gameOver) {
+  if (checkForWin() || checkForTie()) {
     endGame('Game is over! Start a new game!');
+    document.querySelector('button').click();
     return;
   }
 
@@ -97,9 +91,8 @@ function handleClick(evt) {
   }
 
   // check for tie
-  if (board.every(row => row.every(cell => cell !== 0))) {
-    gameOver = true;
-    endGame('Tie game!  Board is filled!');
+  if (checkForTie()) {
+    return endGame('Tie game!  Board is filled!');
   }
   
   // switch players
@@ -107,7 +100,10 @@ function handleClick(evt) {
   setStatus();
 }
 
-const setStatus = () => document.querySelector('#turn').innerText = `Player${currPlayer}'s turn!`;
+/* checkForTie: check to see if all cells are filled */
+function checkForTie() {
+  return board.every(row => row.every(cell => cell !== 0));
+}
 
 /** checkForWin: check board cell-by-cell for "does a win start here?" */
 function checkForWin() {
@@ -136,12 +132,14 @@ function checkForWin() {
       let diagDL = [[y, x], [y + 1, x - 1], [y + 2, x - 2], [y + 3, x - 3]];
 
       if (_win(horiz) || _win(vert) || _win(diagDR) || _win(diagDL)) {
-        gameOver = true;
+        //gameOver = true;
         return true;
       }
     }
   }
 }
+
+const setStatus = () => document.querySelector('#turn').innerText = `Player${currPlayer}'s turn!`;
 
 const reset = () => {
   for (let tr of document.querySelectorAll('tr')) {
